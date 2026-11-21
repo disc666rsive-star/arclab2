@@ -1,0 +1,33 @@
+
+services:
+  users:
+    image: arclab2-users:latest
+    deploy:
+      replicas: 1
+
+  products:
+    image: arclab2-products:latest
+    deploy:
+      replicas: 1
+
+  main:
+    image: arclab2-main:latest
+    environment:
+      USERS_URL: http://users:5001
+      PRODUCTS_URL: http://products:5002
+    deploy:
+      replicas: 1
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    deploy:
+      replicas: 1
+
+configs:
+  nginx_config:
+    file: ./nginx/nginx.conf
